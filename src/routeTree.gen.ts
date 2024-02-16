@@ -11,25 +11,23 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as ModalImport } from './routes/_modal'
-import { Route as LayoutImport } from './routes/_layout'
+import { Route as ModalImport } from './routes/modal'
+import { Route as MainImport } from './routes/main'
 import { Route as IndexImport } from './routes/index'
-import { Route as ModalTeamImport } from './routes/_modal.team'
-import { Route as ModalContactsImport } from './routes/_modal.contacts'
-import { Route as LayoutHomeImport } from './routes/_layout.home'
-import { Route as LayoutAboutImport } from './routes/_layout.about'
-import { Route as ModalContactsIndexImport } from './routes/_modal.contacts.index'
-import { Route as ModalContactsIdImport } from './routes/_modal.contacts.$id'
+import { Route as ModalIndexImport } from './routes/modal/index'
+import { Route as MainIndexImport } from './routes/main/index'
+import { Route as ModalTeamsImport } from './routes/modal/teams'
+import { Route as MainAboutImport } from './routes/main/about'
 
 // Create/Update Routes
 
 const ModalRoute = ModalImport.update({
-  id: '/_modal',
+  path: '/modal',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LayoutRoute = LayoutImport.update({
-  id: '/_layout',
+const MainRoute = MainImport.update({
+  path: '/main',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -38,34 +36,24 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ModalTeamRoute = ModalTeamImport.update({
-  path: '/team',
-  getParentRoute: () => ModalRoute,
-} as any)
-
-const ModalContactsRoute = ModalContactsImport.update({
-  path: '/contacts',
-  getParentRoute: () => ModalRoute,
-} as any)
-
-const LayoutHomeRoute = LayoutHomeImport.update({
-  path: '/home',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
-const LayoutAboutRoute = LayoutAboutImport.update({
-  path: '/about',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
-const ModalContactsIndexRoute = ModalContactsIndexImport.update({
+const ModalIndexRoute = ModalIndexImport.update({
   path: '/',
-  getParentRoute: () => ModalContactsRoute,
+  getParentRoute: () => ModalRoute,
 } as any)
 
-const ModalContactsIdRoute = ModalContactsIdImport.update({
-  path: '/$id',
-  getParentRoute: () => ModalContactsRoute,
+const MainIndexRoute = MainIndexImport.update({
+  path: '/',
+  getParentRoute: () => MainRoute,
+} as any)
+
+const ModalTeamsRoute = ModalTeamsImport.update({
+  path: '/teams',
+  getParentRoute: () => ModalRoute,
+} as any)
+
+const MainAboutRoute = MainAboutImport.update({
+  path: '/about',
+  getParentRoute: () => MainRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -76,37 +64,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/_layout': {
-      preLoaderRoute: typeof LayoutImport
+    '/main': {
+      preLoaderRoute: typeof MainImport
       parentRoute: typeof rootRoute
     }
-    '/_modal': {
+    '/modal': {
       preLoaderRoute: typeof ModalImport
       parentRoute: typeof rootRoute
     }
-    '/_layout/about': {
-      preLoaderRoute: typeof LayoutAboutImport
-      parentRoute: typeof LayoutImport
+    '/main/about': {
+      preLoaderRoute: typeof MainAboutImport
+      parentRoute: typeof MainImport
     }
-    '/_layout/home': {
-      preLoaderRoute: typeof LayoutHomeImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_modal/contacts': {
-      preLoaderRoute: typeof ModalContactsImport
+    '/modal/teams': {
+      preLoaderRoute: typeof ModalTeamsImport
       parentRoute: typeof ModalImport
     }
-    '/_modal/team': {
-      preLoaderRoute: typeof ModalTeamImport
+    '/main/': {
+      preLoaderRoute: typeof MainIndexImport
+      parentRoute: typeof MainImport
+    }
+    '/modal/': {
+      preLoaderRoute: typeof ModalIndexImport
       parentRoute: typeof ModalImport
-    }
-    '/_modal/contacts/$id': {
-      preLoaderRoute: typeof ModalContactsIdImport
-      parentRoute: typeof ModalContactsImport
-    }
-    '/_modal/contacts/': {
-      preLoaderRoute: typeof ModalContactsIndexImport
-      parentRoute: typeof ModalContactsImport
     }
   }
 }
@@ -115,14 +95,8 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  LayoutRoute.addChildren([LayoutAboutRoute, LayoutHomeRoute]),
-  ModalRoute.addChildren([
-    ModalContactsRoute.addChildren([
-      ModalContactsIdRoute,
-      ModalContactsIndexRoute,
-    ]),
-    ModalTeamRoute,
-  ]),
+  MainRoute.addChildren([MainAboutRoute, MainIndexRoute]),
+  ModalRoute.addChildren([ModalTeamsRoute, ModalIndexRoute]),
 ])
 
 /* prettier-ignore-end */

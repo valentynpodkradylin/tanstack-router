@@ -2,7 +2,6 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   beforeLoad: () => {
-    throw redirect({ to: "/home" });
+    throw redirect({ to: "/main" });
   },
-  component: () => <div>Index</div>,
 });
