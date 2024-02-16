@@ -13,11 +13,14 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as ModalImport } from './routes/modal'
 import { Route as MainImport } from './routes/main'
+import { Route as LayoutImport } from './routes/_layout'
 import { Route as IndexImport } from './routes/index'
 import { Route as ModalIndexImport } from './routes/modal/index'
 import { Route as MainIndexImport } from './routes/main/index'
 import { Route as ModalTeamsImport } from './routes/modal/teams'
 import { Route as MainAboutImport } from './routes/main/about'
+import { Route as MainAboutIndexImport } from './routes/main/about/index'
+import { Route as MainAboutAboutIdImport } from './routes/main/about/$aboutId'
 
 // Create/Update Routes
 
@@ -28,6 +31,11 @@ const ModalRoute = ModalImport.update({
 
 const MainRoute = MainImport.update({
   path: '/main',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LayoutRoute = LayoutImport.update({
+  id: '/_layout',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -56,12 +64,26 @@ const MainAboutRoute = MainAboutImport.update({
   getParentRoute: () => MainRoute,
 } as any)
 
+const MainAboutIndexRoute = MainAboutIndexImport.update({
+  path: '/',
+  getParentRoute: () => MainAboutRoute,
+} as any)
+
+const MainAboutAboutIdRoute = MainAboutAboutIdImport.update({
+  path: '/$aboutId',
+  getParentRoute: () => MainAboutRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_layout': {
+      preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
     }
     '/main': {
@@ -88,6 +110,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModalIndexImport
       parentRoute: typeof ModalImport
     }
+    '/main/about/$aboutId': {
+      preLoaderRoute: typeof MainAboutAboutIdImport
+      parentRoute: typeof MainAboutImport
+    }
+    '/main/about/': {
+      preLoaderRoute: typeof MainAboutIndexImport
+      parentRoute: typeof MainAboutImport
+    }
   }
 }
 
@@ -95,7 +125,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  MainRoute.addChildren([MainAboutRoute, MainIndexRoute]),
+  LayoutRoute,
+  MainRoute.addChildren([
+    MainAboutRoute.addChildren([MainAboutAboutIdRoute, MainAboutIndexRoute]),
+    MainIndexRoute,
+  ]),
   ModalRoute.addChildren([ModalTeamsRoute, ModalIndexRoute]),
 ])
 

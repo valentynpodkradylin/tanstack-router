@@ -1,7 +1,17 @@
-import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  createFileRoute,
+  useNavigate,
+} from "@tanstack/react-router";
 
 export const Route = createFileRoute("/modal")({
-  component: () => (
+  component: Modal,
+});
+
+function Modal() {
+  const navigate = useNavigate();
+  return (
     <div
       style={{
         height: "100vh",
@@ -9,15 +19,30 @@ export const Route = createFileRoute("/modal")({
     >
       <div
         style={{
-          height: "40px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          gap: "15px",
           backgroundColor: "green",
+          padding: 10,
         }}
       >
-        <Link to={"/modal/teams"}>Teams</Link>
+        <div
+          onClick={() => navigate({ to: "../" })}
+          style={{ cursor: "pointer", fontWeight: 600 }}
+        >
+          Go Back!
+        </div>
+        <div
+          style={{
+            flex: "1",
+            height: "40px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "15px",
+          }}
+        >
+          <Link to={"/modal/teams"}>Teams</Link>
+        </div>
       </div>
       <div
         style={{
@@ -29,5 +54,5 @@ export const Route = createFileRoute("/modal")({
         <Outlet />
       </div>
     </div>
-  ),
-});
+  );
+}

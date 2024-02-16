@@ -1,6 +1,6 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/main")({
+export const Route = createFileRoute("/_layout")({
   component: () => (
     <div
       style={{
@@ -17,9 +17,8 @@ export const Route = createFileRoute("/main")({
           backgroundColor: "orange",
         }}
       >
-        <Link to={"/main"}>Home</Link>
-        <Link to={"/main/about"}>About</Link>
-        <Link to={"/modal"}>Modal</Link>
+        <Link to={"/"}>Home</Link>
+        <Link to={"/about"}>About</Link>
       </div>
       <div
         style={{
