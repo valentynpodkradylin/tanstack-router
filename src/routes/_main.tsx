@@ -1,7 +1,11 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_layout")({
-  component: () => (
+export const Route = createFileRoute("/_main")({
+  component: Main,
+});
+
+function Main() {
+  return (
     <div
       style={{
         height: "100vh",
@@ -9,26 +13,31 @@ export const Route = createFileRoute("/_layout")({
     >
       <div
         style={{
-          height: "40px",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "60px",
           display: "flex",
+          zIndex: 1000,
           alignItems: "center",
           justifyContent: "center",
-          gap: "15px",
-          backgroundColor: "orange",
+          gap: "20px",
+          backgroundColor: "rgba(255, 137, 17, 0.9)",
         }}
       >
         <Link to={"/"}>Home</Link>
-        <Link to={"/about"}>About</Link>
+        <Link to={"/posts"}>Posts</Link>
       </div>
       <div
         style={{
+          marginTop: 60,
           height: "100%",
-          display: "grid",
-          placeItems: "center",
+          padding: "10px",
         }}
       >
         <Outlet />
       </div>
     </div>
-  ),
-});
+  );
+}

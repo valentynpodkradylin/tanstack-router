@@ -11,42 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as ModalImport } from './routes/modal'
-import { Route as MainImport } from './routes/main'
-import { Route as LayoutImport } from './routes/_layout'
-import { Route as IndexImport } from './routes/index'
-import { Route as ModalIndexImport } from './routes/modal/index'
-import { Route as MainIndexImport } from './routes/main/index'
-import { Route as ModalTeamsImport } from './routes/modal/teams'
-import { Route as MainAboutImport } from './routes/main/about'
-import { Route as MainAboutIndexImport } from './routes/main/about/index'
-import { Route as MainAboutAboutIdImport } from './routes/main/about/$aboutId'
+import { Route as MainImport } from './routes/_main'
+import { Route as MainIndexImport } from './routes/_main/index'
+import { Route as MainPostsImport } from './routes/_main/posts'
+import { Route as MainPostsIndexImport } from './routes/_main/posts/index'
+import { Route as MainPostsCommentImport } from './routes/_main/posts/comment'
+import { Route as MainPostsPostIdImport } from './routes/_main/posts/$postId'
 
 // Create/Update Routes
 
-const ModalRoute = ModalImport.update({
-  path: '/modal',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const MainRoute = MainImport.update({
-  path: '/main',
+  id: '/_main',
   getParentRoute: () => rootRoute,
-} as any)
-
-const LayoutRoute = LayoutImport.update({
-  id: '/_layout',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const IndexRoute = IndexImport.update({
-  path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ModalIndexRoute = ModalIndexImport.update({
-  path: '/',
-  getParentRoute: () => ModalRoute,
 } as any)
 
 const MainIndexRoute = MainIndexImport.update({
@@ -54,69 +30,53 @@ const MainIndexRoute = MainIndexImport.update({
   getParentRoute: () => MainRoute,
 } as any)
 
-const ModalTeamsRoute = ModalTeamsImport.update({
-  path: '/teams',
-  getParentRoute: () => ModalRoute,
-} as any)
-
-const MainAboutRoute = MainAboutImport.update({
-  path: '/about',
+const MainPostsRoute = MainPostsImport.update({
+  path: '/posts',
   getParentRoute: () => MainRoute,
 } as any)
 
-const MainAboutIndexRoute = MainAboutIndexImport.update({
+const MainPostsIndexRoute = MainPostsIndexImport.update({
   path: '/',
-  getParentRoute: () => MainAboutRoute,
+  getParentRoute: () => MainPostsRoute,
 } as any)
 
-const MainAboutAboutIdRoute = MainAboutAboutIdImport.update({
-  path: '/$aboutId',
-  getParentRoute: () => MainAboutRoute,
+const MainPostsCommentRoute = MainPostsCommentImport.update({
+  path: '/comment',
+  getParentRoute: () => MainPostsRoute,
+} as any)
+
+const MainPostsPostIdRoute = MainPostsPostIdImport.update({
+  path: '/$postId',
+  getParentRoute: () => MainPostsRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/_layout': {
-      preLoaderRoute: typeof LayoutImport
-      parentRoute: typeof rootRoute
-    }
-    '/main': {
+    '/_main': {
       preLoaderRoute: typeof MainImport
       parentRoute: typeof rootRoute
     }
-    '/modal': {
-      preLoaderRoute: typeof ModalImport
-      parentRoute: typeof rootRoute
-    }
-    '/main/about': {
-      preLoaderRoute: typeof MainAboutImport
+    '/_main/posts': {
+      preLoaderRoute: typeof MainPostsImport
       parentRoute: typeof MainImport
     }
-    '/modal/teams': {
-      preLoaderRoute: typeof ModalTeamsImport
-      parentRoute: typeof ModalImport
-    }
-    '/main/': {
+    '/_main/': {
       preLoaderRoute: typeof MainIndexImport
       parentRoute: typeof MainImport
     }
-    '/modal/': {
-      preLoaderRoute: typeof ModalIndexImport
-      parentRoute: typeof ModalImport
+    '/_main/posts/$postId': {
+      preLoaderRoute: typeof MainPostsPostIdImport
+      parentRoute: typeof MainPostsImport
     }
-    '/main/about/$aboutId': {
-      preLoaderRoute: typeof MainAboutAboutIdImport
-      parentRoute: typeof MainAboutImport
+    '/_main/posts/comment': {
+      preLoaderRoute: typeof MainPostsCommentImport
+      parentRoute: typeof MainPostsImport
     }
-    '/main/about/': {
-      preLoaderRoute: typeof MainAboutIndexImport
-      parentRoute: typeof MainAboutImport
+    '/_main/posts/': {
+      preLoaderRoute: typeof MainPostsIndexImport
+      parentRoute: typeof MainPostsImport
     }
   }
 }
@@ -124,13 +84,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  IndexRoute,
-  LayoutRoute,
   MainRoute.addChildren([
-    MainAboutRoute.addChildren([MainAboutAboutIdRoute, MainAboutIndexRoute]),
+    MainPostsRoute.addChildren([
+      MainPostsPostIdRoute,
+      MainPostsCommentRoute,
+      MainPostsIndexRoute,
+    ]),
     MainIndexRoute,
   ]),
-  ModalRoute.addChildren([ModalTeamsRoute, ModalIndexRoute]),
 ])
 
 /* prettier-ignore-end */
